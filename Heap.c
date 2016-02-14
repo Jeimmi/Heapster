@@ -12,7 +12,7 @@ typedef struct Block
 	
 }Block;
 
-const int overhead = 8+sizeof(void*);
+const int overhead = 8+sizeof(void*);//Added 8 instead of sizeof(int) to avoid segmentation fault
 
 struct Block *free_head;
 void my_initialize_heap(int size);
