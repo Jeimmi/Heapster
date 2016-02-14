@@ -130,7 +130,7 @@ return 0;
 }
 
 void my_free(void *data){
-	//struct Block *clear_space = (Block*)((unsigned char *)data - overhead);
+	
 	struct Block *clear_space = free_head;
 	free_head = (Block*)(((unsigned char*)data) - overhead);
 	free_head->next_block = clear_space;
