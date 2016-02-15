@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -12,68 +11,77 @@ typedef struct Block
 	
 }Block;
 
-const int overhead = 8+sizeof(void*);//Added 8 instead of sizeof(int) to avoid segmentation fault
+const int overhead = sizeof(int)+sizeof(void*);//Added 8 instead of sizeof(int) to avoid segmentation fault
 
 struct Block *free_head;
 void my_initialize_heap(int size);
 void* my_alloc(int size);
 void my_free(void *data);
+void standard_deviation();
 
 int main(){
-	const int HEAP_SIZE = 10000;
-	my_initialize_heap(HEAP_SIZE);
+
+	my_initialize_heap(5000);
 
 
-/*	printf("TEST 1\n");
-
-	int *first = my_alloc(sizeof(int));
+	/*printf("TEST 1\n");
+	int *first =(int*) my_alloc(sizeof(int));
     printf("%p\n",first);
     my_free(first);
-    int *second = my_alloc(sizeof(int));
+    int *second =(int*) my_alloc(sizeof(int));
     printf("%p\n",second);
     my_free(second);*/
 
-/*  printf("TEST 2\n");
-  
-    int* one = my_alloc(sizeof(int));
+    /*printf("TEST 2\n");
+    int* one = (int*)my_alloc(sizeof(int));
     printf("%d\n", one);
-    int* two = my_alloc(sizeof(int));
-    printf("%d\n",two );
-    printf("Address 2 - 1 = %d - %d = %d \n",two, one,
-	(two - one)*sizeof(int));
-    printf("%lu\n",(8+8+sizeof(void*)) );*/
+    int* two = (int*)my_alloc(sizeof(int));
+    printf("%d\n",two );*/
 
+	/*
     printf("TEST 3\n");
     my_initialize_heap(50);
-    int *uno = my_alloc(sizeof(int));
+    int *uno =(int*) my_alloc(sizeof(int));
     printf("%p\t\n",uno);
-    int *dos = my_alloc(sizeof(int));
+    int *dos = (int*)my_alloc(sizeof(int));
     printf("%p\t\n",dos);
-    int *tres = my_alloc(sizeof(int));
+    int *tres = (int*)my_alloc(sizeof(int));
     printf("%p\t\n",tres);
+    my_free(dos);
 
-    /*my_free(dos);
     double *d_tres = (double*)my_alloc(sizeof(double));
+	printf("\nNew Allocation\n");
     printf("%p\t\n",d_tres);
 
     int *tres_new = (int*)my_alloc(sizeof(int));
-    printf("%p\t\n", d_tres);
-*/
+    printf("%p\t\n", tres_new);*/
 
     /*printf("TEST 4\n");
     my_initialize_heap(50);
-    char *word = (char*)my_alloc(sizeof(char));
+    char *word = (char*)my_alloc(sizeof(unsigned char*));
     printf("%p\t\n",word);
     int *numero = (int*)my_alloc(sizeof(int));
-    printf("%p\n",numero);*/
+    printf("%p\n",numero*/
 
 
+	/*printf("TEST 5\n");
+	int* array = (int*)my_alloc((100 * sizeof(int)));
+	int* int_val = (int*)my_alloc(sizeof(int));
+	
+	printf("array: %p\t",array);
+	printf("int value: %p\t\n",int_val);
+	my_free(array);
+	printf("Array has been freed\n");
+	printf("array: %p\t",array);
+	printf("int value: %p\t\n",int_val);*/
+
+	//standard_deviation();
 
 	return 0;
 }
 
 void my_initialize_heap(int size){
-	free_head = malloc(size);
+	free_head =(struct Block*) malloc(size);
     free_head->block_size = size;
     free_head->next_block = NULL;
 }
@@ -95,13 +103,14 @@ void* my_alloc(int size){
    while(open_block){
        if(size <= open_block->block_size){
 	    //split and add head
+		   printf("Head Block Size:%i\n",free_head->block_size);
 	        if(req_size<=free_head->block_size){
 		       //free_head->block_size = size;
-		        free_head = newBlock(free_head,req_size);
+		        free_head = (Block*)newBlock(free_head,req_size);
 		        return &open_block->data;
         //split and not add head
 	       }else if(req_size<=open_block->block_size){
-		        previous_block->next_block = newBlock(open_block,req_size);;
+		        previous_block->next_block =(Block*) newBlock(open_block,req_size);
 		        open_block->next_block = NULL;
 		        open_block->block_size = size;
 		        return &open_block->data;
@@ -136,5 +145,25 @@ void my_free(void *data){
 	free_head->next_block = clear_space;
 
 }
-
-
+/*void standard_deviation(){
+		printf("Eneter a positive number\n");
+	int user_int;
+	scanf_s("%d",&user_int);
+	int *user_arr = (int*)my_alloc(user_int*sizeof(int));
+	int number, sum = 0;
+	double standard_dev = 0 ,mean = 0;
+	for(int i = 0; i < user_int; i++){
+		printf("Enter a number: \n");
+		scanf_s("%d",&number);
+		user_arr[i]=number;
+	}
+	for(int i = 0; i < user_int; i++){
+		sum = sum+user_arr[i];
+	}
+	mean = sum/user_int;
+	for(int i = 0; i < user_int; i++){
+		standard_dev += pow(user_arr[i]-mean,2);
+	}
+	standard_dev = sqrt(standard_dev/user_int);
+	printf("Standard Deviation: %f\n",standard_dev);
+}*/
